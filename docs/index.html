@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>Bank Account Management System – Project Overview</title>
+    <title>Bank Account Management System – Project Presentation</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
         :root {
@@ -11,6 +11,7 @@
             --card-bg: #1f1f1f;
             --accent: #3fa9f5;
             --accent-soft: rgba(63, 169, 245, 0.2);
+            --accent-strong: #5ed0ff;
             --text: #f5f5f5;
             --muted: #bbbbbb;
             --border: #444444;
@@ -33,8 +34,6 @@
             line-height: 1.6;
         }
 
-        /* Layout */
-
         .page {
             min-height: 100vh;
             display: grid;
@@ -48,7 +47,7 @@
             backdrop-filter: blur(16px);
             background: linear-gradient(
                 to bottom,
-                rgba(0, 0, 0, 0.85),
+                rgba(0, 0, 0, 0.9),
                 rgba(0, 0, 0, 0.25)
             );
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
@@ -101,7 +100,7 @@
         }
 
         section {
-            margin-bottom: 2rem;
+            margin-bottom: 2.4rem;
         }
 
         .hero {
@@ -213,6 +212,10 @@
             color: var(--muted);
         }
 
+        .card ul ul {
+            margin-top: 0.25rem;
+        }
+
         .card code {
             background: var(--code-bg);
             padding: 0.15rem 0.35rem;
@@ -246,6 +249,28 @@
             overflow-x: auto;
         }
 
+        .timeline {
+            border-left: 2px solid var(--border);
+            margin-top: 0.6rem;
+            padding-left: 1rem;
+        }
+
+        .timeline-item {
+            margin-bottom: 0.7rem;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: "";
+            position: absolute;
+            left: -1.05rem;
+            top: 0.25rem;
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: var(--accent);
+        }
+
         footer {
             text-align: center;
             font-size: 0.75rem;
@@ -257,6 +282,17 @@
         a {
             color: var(--accent);
         }
+
+        .note {
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-top: 0.25rem;
+        }
+
+        .highlight {
+            color: var(--accent-strong);
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -266,8 +302,10 @@
             <div class="logo">CS 371 · Final Project</div>
             <div class="nav-links">
                 <a href="#intro">Intro</a>
+                <a href="#requirements">Requirements</a>
                 <a href="#architecture">Architecture</a>
-                <a href="#implementation">Implementation</a>
+                <a href="#classes">Key Classes</a>
+                <a href="#flow">Program Flow</a>
                 <a href="#transactions">Transactions</a>
                 <a href="#manager">Manager Tools</a>
                 <a href="#testing">Testing</a>
@@ -277,279 +315,522 @@
     </header>
 
     <main>
-        <!-- HERO -->
+        <!-- HERO / INTRO -->
         <section id="intro" class="hero">
             <div>
                 <h1 class="hero-title">Bank Account Management System</h1>
                 <p class="hero-subtitle">
-                    A C++ object-oriented console application that simulates a simple
-                    banking system with user accounts, transaction logging, and
-                    manager-level administration tools.
+                    A modular C++ console application that simulates a basic banking
+                    system, built with object-oriented design, text-file persistence,
+                    and a manager-level admin panel.
                 </p>
                 <p class="hero-meta">
-                    <strong>Authors:</strong> Jack London, Ethan Christman, David Desing
-                    <br />
+                    <strong>Authors:</strong> Jack London, Ethan Christman, David Desing<br/>
                     <strong>Course:</strong> CompSci 371 – Final Project
                 </p>
                 <div class="chip-row">
                     <span class="chip">Language: C++</span>
                     <span class="chip">Paradigm: OOP</span>
                     <span class="chip">Persistence: Text Files</span>
-                    <span class="chip">Modules: User · BankAccount · Manager · Transactions</span>
+                    <span class="chip">Features: Accounts · Transactions · Manager</span>
                 </div>
             </div>
             <aside class="hero-card">
-                <h2>At a Glance</h2>
+                <h2>Presentation Roadmap</h2>
                 <ul>
-                    <li>User account creation & login</li>
-                    <li>Checking & Saving account types</li>
-                    <li>Deposits, withdrawals, balance viewing</li>
-                    <li>Transaction history with timestamps</li>
-                    <li>Manager panel: view & delete users, view history</li>
+                    <li>What problem we are solving.</li>
+                    <li>System requirements and constraints.</li>
+                    <li>Architecture & core classes.</li>
+                    <li>How the code actually runs (flow).</li>
+                    <li>Transactions & logging design.</li>
+                    <li>Manager tools and admin features.</li>
+                    <li>Testing strategy and results.</li>
+                    <li>Limitations & ideas for future work.</li>
                 </ul>
             </aside>
         </section>
 
-        <!-- ARCHITECTURE -->
-        <section id="architecture">
-            <h2 class="section-title">System Architecture</h2>
+        <!-- REQUIREMENTS -->
+        <section id="requirements">
+            <h2 class="section-title">Functional Requirements & Goals</h2>
             <p class="section-subtitle">
-                The project follows a modular object-oriented design. Each major
-                responsibility is encapsulated in its own class or module.
+                Before writing code, we clarified what the system must do and what
+                trade-offs we are okay with for a console-based final project.
             </p>
 
             <div class="grid-2">
                 <div class="card">
-                    <h3>Core Classes</h3>
+                    <h3>Functional Requirements</h3>
                     <ul>
-                        <li><strong>User</strong> – Represents a bank customer and handles loading/saving to <code>Users/&lt;username&gt;.txt</code>.</li>
-                        <li><strong>BankAccount</strong> – Abstract base class exposing common operations like <code>deposit</code>, <code>withdraw</code>, and the account menu.</li>
-                        <li><strong>CheckingAccount</strong> / <strong>SavingAccount</strong> – Implement account-specific behavior via polymorphism.</li>
+                        <li>Create new user accounts with:
+                            <ul>
+                                <li>First & last name</li>
+                                <li>Unique username (validated)</li>
+                                <li>Password</li>
+                                <li>Account type: Checking or Saving</li>
+                                <li>Initial deposit ≥ $20</li>
+                            </ul>
+                        </li>
+                        <li>Allow existing users to log in.</li>
+                        <li>Provide account operations:
+                            <ul>
+                                <li>Deposit</li>
+                                <li>Withdraw</li>
+                                <li>View account info</li>
+                                <li>View transaction history</li>
+                            </ul>
+                        </li>
+                        <li>Persist users and balances between runs.</li>
                     </ul>
                 </div>
 
                 <div class="card">
-                    <h3>Supporting Modules</h3>
+                    <h3>Non-Functional Goals</h3>
                     <ul>
-                        <li><strong>Transactions</strong> – Parses and prints transaction history; adds initial deposit entries.</li>
-                        <li><strong>Deposit</strong> / <strong>Withdraw</strong> – Encapsulate the actual balance updates and transaction logging.</li>
-                        <li><strong>Menu</strong> – Simple textual menu renderer reused for main menu, account menu, and manager menu.</li>
-                        <li><strong>Manager</strong> – Namespace that implements manager login and admin tools.</li>
+                        <li>Use clean object-oriented design.</li>
+                        <li>Minimize global state; keep logic encapsulated in classes.</li>
+                        <li>Separate user responsibilities from manager responsibilities.</li>
+                        <li>Make the code easy to extend (e.g., more account types).</li>
+                        <li>Keep dependencies simple: standard C++ + STL + filesystem.</li>
                     </ul>
-                </div>
-            </div>
-
-            <div class="card" style="margin-top:1rem;">
-                <h3>UML (Conceptual)</h3>
-                <p class="section-subtitle">
-                    High-level class relationships:
-                </p>
-                <div class="code-block">
-User &lt;-- BankAccount* (composition at runtime)
-BankAccount (abstract)
- ├─ CheckingAccount
- └─ SavingAccount
-
-User
- ├─ owns: username, password, balance, accountType, transactions
- └─ persists to: Users/&lt;username&gt;.txt
-
-Manager (namespace)
- ├─ ManagerLogin()
- ├─ managerMenu()
- ├─ ViewAUser()
- └─ ViewUserHistory()
-
-Transactions (namespace)
- ├─ parse(history)
- ├─ print(User*)
- └─ addInitialDeposit(User*, amount)
+                    <p class="note">
+                        These goals influenced decisions like using text files over a
+                        database and using polymorphism for account types.
+                    </p>
                 </div>
             </div>
         </section>
 
-        <!-- IMPLEMENTATION -->
-        <section id="implementation">
-            <h2 class="section-title">Implementation Highlights</h2>
+        <!-- ARCHITECTURE -->
+        <section id="architecture">
+            <h2 class="section-title">System Architecture Overview</h2>
             <p class="section-subtitle">
-                The implementation is focused on clear data flow, safe input handling,
-                and readable modular code.
+                The system uses several cooperating modules. Each module has a clear
+                responsibility and communicates through well-defined interfaces.
             </p>
 
             <div class="grid-2">
                 <div class="card">
-                    <h3>User Creation Flow</h3>
+                    <h3>High-Level Modules</h3>
                     <ul>
-                        <li>Prompt for first and last name.</li>
-                        <li>Validate username (no spaces, not already taken).</li>
-                        <li>Prompt for password.</li>
-                        <li>Choose account type: Checking or Saving.</li>
-                        <li>Enter initial deposit (minimum of $20, or cancel with <code>-1</code>).</li>
-                        <li>Save all data to <code>Users/&lt;username&gt;.txt</code>.</li>
-                        <li>Record an <strong>INITIAL_DEPOSIT</strong> transaction.</li>
+                        <li><strong>Main</strong> – entry point; shows the main menu and routes to
+                            user login, account creation, and manager login.</li>
+                        <li><strong>User</strong> – represents an individual customer; knows how to
+                            load and save itself from a text file.</li>
+                        <li><strong>BankAccount</strong> – abstract base class that defines
+                            operations every account must support (deposit, withdraw, menu).</li>
+                        <li><strong>CheckingAccount / SavingAccount</strong> – concrete account
+                            types that implement the abstract behavior.</li>
+                        <li><strong>Transactions</strong> – parses and prints transaction history
+                            and records initial deposits.</li>
+                        <li><strong>Manager</strong> – namespace with admin functions and menus.</li>
+                        <li><strong>Menu</strong> – reusable UI component for displaying menus.</li>
                     </ul>
                 </div>
 
                 <div class="card">
-                    <h3>Login & Account Menu</h3>
+                    <h3>File & Directory Layout</h3>
                     <ul>
-                        <li>Login searches for the user’s file and verifies the <code>Password:</code> line.</li>
-                        <li>On success, constructs the appropriate account type:
-                            <div class="pill-list">
-                                <span class="pill">CheckingAccount</span>
-                                <span class="pill">SavingAccount</span>
-                            </div>
-                        </li>
-                        <li>Account menu options:
+                        <li><code>Users/</code> – one file per user:
                             <ul>
-                                <li>Deposit</li>
-                                <li>Withdraw</li>
-                                <li>Account Info</li>
-                                <li>View Activity</li>
-                                <li>Log Out</li>
+                                <li><code>Users/&lt;username&gt;.txt</code></li>
                             </ul>
                         </li>
+                        <li><code>Managers/</code> – directory reserved for manager data;
+                            currently includes <code>managers.txt</code> and supports hard-coded
+                            login.</li>
+                        <li><strong>User::createUserDirectory()</strong>:
+                            <ul>
+                                <li>Ensures required directories exist on startup.</li>
+                                <li>Initializes <code>id_count</code> based on files in
+                                    <code>Users/</code>.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <p class="note">
+                        This structure makes it easy to inspect and debug account files by
+                        hand during development and testing.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top:1rem;">
+                <h3>Conceptual UML</h3>
+                <div class="code-block">
+User
+ ├─ int userid
+ ├─ std::string username, password
+ ├─ std::string first_name, last_name
+ ├─ double balance
+ ├─ std::string account_type
+ └─ std::string transactions
+
+BankAccount (abstract)
+ ├─ User* user
+ ├─ virtual void deposit(User*, double) = 0
+ ├─ virtual void withdraw(User*, double) = 0
+ ├─ virtual std::string getAccountType() const = 0
+ └─ void AccountMenu(User*)
+
+CheckingAccount : public BankAccount
+SavingAccount   : public BankAccount
+
+namespace Transactions
+ ├─ std::vector&lt;Transaction&gt; parse(const std::string&)
+ ├─ void print(const User*)
+ └─ void addInitialDeposit(User*, double)
+
+namespace Manager
+ ├─ void ManagerLogin()
+ └─ void managerMenu()
+                </div>
+            </div>
+        </section>
+
+        <!-- KEY CLASSES -->
+        <section id="classes">
+            <h2 class="section-title">Key Classes & Design Decisions</h2>
+            <p class="section-subtitle">
+                In this section we walk through the most important classes and explain
+                why they are designed the way they are.
+            </p>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h3>User Class</h3>
+                    <ul>
+                        <li>Represents one bank customer.</li>
+                        <li>Keeps track of:
+                            <ul>
+                                <li><code>userid</code> – auto-incremented ID.</li>
+                                <li>name, username, password.</li>
+                                <li>balance and account type.</li>
+                                <li>full transaction history as a single string.</li>
+                            </ul>
+                        </li>
+                        <li>Key responsibilities:
+                            <ul>
+                                <li><strong>createAccount</strong>: interactive prompts with
+                                    validation.</li>
+                                <li><strong>saveToFile</strong> and <strong>loadUserFromFile</strong>:
+                                    simple persistence.</li>
+                                <li><strong>listUsers</strong>: used by the manager to inspect all
+                                    accounts.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <p class="note">
+                        Design choice: we keep transactions as one large string. For this
+                        project scale, it’s simpler than modeling a full separate
+                        transaction table or database.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3>BankAccount &amp; Derived Classes</h3>
+                    <ul>
+                        <li><strong>BankAccount</strong> is an abstract base class:
+                            <ul>
+                                <li>Exposes the <code>AccountMenu</code> function.</li>
+                                <li>Declares virtual <code>deposit</code>, <code>withdraw</code>,
+                                    <code>getAccountType</code>.</li>
+                            </ul>
+                        </li>
+                        <li><strong>CheckingAccount</strong> and <strong>SavingAccount</strong>:
+                            <ul>
+                                <li>Implement banking operations by delegating to
+                                    <code>Deposit::makeDeposit</code> and
+                                    <code>Withdraw::makeWithdraw</code>.</li>
+                                <li>Return their own account type strings.</li>
+                            </ul>
+                        </li>
+                        <li>Polymorphism lets us select the right behavior at runtime based
+                            on the user’s saved account type.</li>
                     </ul>
                 </div>
             </div>
 
             <div class="card" style="margin-top:1rem;">
-                <h3>File Format Example</h3>
-                <div class="code-block">
-Account#: 1002
-Username: desidj27
-Password: taco
-First: David
-Last: Desing
-Balance: 722.03
-Account Type: Checking
-Transaction History: INITIAL_DEPOSIT:300.12 TIME:2025/12/10 17:17:10 NEW_AMOUNT:300.12|DEPOSIT:421.91 TIME:2025/12/10 17:17:44 NEW_AMOUNT:722.03|
+                <h3>Menu &amp; Reuse</h3>
+                <ul>
+                    <li>The <strong>Menu</strong> class is a tiny helper that:
+                        <ul>
+                            <li>Takes a title and a list of string options.</li>
+                            <li>Prints them with numbered choices.</li>
+                            <li>Is reused for:
+                                <span class="pill-list">
+                                    <span class="pill">Main Menu</span>
+                                    <span class="pill">User Account Menu</span>
+                                    <span class="pill">Manager Menu</span>
+                                </span>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>This keeps our UI code consistent and avoids copy-pasting menu loops.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- PROGRAM FLOW -->
+        <section id="flow">
+            <h2 class="section-title">Program Execution Flow</h2>
+            <p class="section-subtitle">
+                This is how the application behaves from the moment you run it until you
+                exit, showing where each module is used.
+            </p>
+
+            <div class="card">
+                <h3>High-Level Flow</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <strong>1. Startup</strong><br/>
+                        <span class="highlight">Main.cpp</span> calls
+                        <code>User::createUserDirectory()</code> to ensure folders exist and
+                        initializes the user ID counter.
+                    </div>
+                    <div class="timeline-item">
+                        <strong>2. Main Menu</strong><br/>
+                        A <code>Menu</code> object displays options:
+                        <em>Create Account, Login, Manager Login, Exit</em>.
+                    </div>
+                    <div class="timeline-item">
+                        <strong>3. Account Creation</strong><br/>
+                        If chosen, <code>User::createAccount()</code> walks the user through
+                        all inputs, validates, and saves the new file (including an
+                        INITIAL_DEPOSIT transaction).
+                    </div>
+                    <div class="timeline-item">
+                        <strong>4. User Login</strong><br/>
+                        Login searches for <code>Users/&lt;username&gt;.txt</code>, checks the
+                        <code>Password:</code> line, and on success loads data into a
+                        <code>User</code> object.
+                    </div>
+                    <div class="timeline-item">
+                        <strong>5. Account Session</strong><br/>
+                        Based on <code>account_type</code>, the program creates either a
+                        <code>CheckingAccount</code> or <code>SavingAccount</code> and calls
+                        <code>AccountMenu(user)</code>.
+                    </div>
+                    <div class="timeline-item">
+                        <strong>6. Account Menu Loop</strong><br/>
+                        The user can repeatedly Deposit, Withdraw, view Account Info, and
+                        View Activity until they choose Logout.
+                    </div>
+                    <div class="timeline-item">
+                        <strong>7. Manager Session</strong><br/>
+                        If Manager Login is chosen and credentials are correct,
+                        <code>Manager::managerMenu()</code> runs a similar loop for admin
+                        operations.
+                    </div>
+                    <div class="timeline-item">
+                        <strong>8. Exit</strong><br/>
+                        When all menus exit, the program terminates cleanly.
+                    </div>
                 </div>
-                <p class="section-subtitle" style="margin-top:0.4rem;">
-                    This line-oriented format makes it straightforward to parse user
-                    records and transaction history when loading from disk.
-                </p>
             </div>
         </section>
 
         <!-- TRANSACTIONS -->
         <section id="transactions">
-            <h2 class="section-title">Transaction System</h2>
+            <h2 class="section-title">Transaction Logging &amp; Parsing</h2>
             <p class="section-subtitle">
-                All balance-changing actions are logged using a unified text format so
-                that the history can be parsed and displayed later.
+                One of the key parts of the project is how we record and read transaction
+                history in a simple text format.
             </p>
 
             <div class="grid-2">
                 <div class="card">
                     <h3>Log Format</h3>
-                    <p>Each entry uses the following pattern:</p>
+                    <p>Each entry uses this unified pattern:</p>
                     <div class="code-block">
 TYPE:amount TIME:YYYY/MM/DD HH:MM:SS NEW_AMOUNT:balance_after|
                     </div>
                     <ul style="margin-top:0.5rem;">
                         <li><strong>TYPE</strong> ∈ {INITIAL_DEPOSIT, DEPOSIT, WITHDRAW}</li>
-                        <li><strong>amount</strong> – the transaction amount</li>
-                        <li><strong>TIME</strong> – timestamp when the action occurred</li>
-                        <li><strong>NEW_AMOUNT</strong> – resulting account balance</li>
+                        <li><strong>amount</strong> – how much money was moved.</li>
+                        <li><strong>TIME</strong> – timestamp when the action happened.</li>
+                        <li><strong>NEW_AMOUNT</strong> – balance after the operation.</li>
                     </ul>
+                    <p class="note">
+                        Entries are concatenated into a single string and stored on the
+                        <code>Transaction History:</code> line in the user’s file.
+                    </p>
                 </div>
 
                 <div class="card">
-                    <h3>Parsing and Display</h3>
+                    <h3>Deposit &amp; Withdraw Modules</h3>
                     <ul>
-                        <li><code>Transactions::parse</code> splits the history on <code>|</code>.</li>
-                        <li>Each entry is parsed into a <code>Transaction</code> struct with:
+                        <li><strong>Deposit::makeDeposit(User*, double)</strong>:
                             <ul>
-                                <li>type</li>
-                                <li>amount</li>
-                                <li>time</li>
-                                <li>newAmount</li>
+                                <li>Validates a positive amount.</li>
+                                <li>Updates the user’s balance.</li>
+                                <li>Appends a <code>DEPOSIT</code> entry to transactions.</li>
+                                <li>Calls <code>saveToFile()</code> to persist changes.</li>
                             </ul>
                         </li>
-                        <li><code>Transactions::print(user)</code> prints a formatted table for:
+                        <li><strong>Withdraw::makeWithdraw(User*, double)</strong>:
                             <ul>
-                                <li>User account menu (View Activity)</li>
-                                <li>Manager panel (View User’s History)</li>
+                                <li>Rejects non-positive amounts.</li>
+                                <li>Checks that the amount does not exceed balance.</li>
+                                <li>On success, updates balance and logs a <code>WITHDRAW</code> entry.</li>
+                                <li>On failure, prints a message and leaves state unchanged.</li>
                             </ul>
                         </li>
+                        <li><strong>Transactions::addInitialDeposit</strong> is called
+                            during account creation.</li>
                     </ul>
                 </div>
+            </div>
+
+            <div class="card" style="margin-top:1rem;">
+                <h3>Viewing History (User &amp; Manager)</h3>
+                <ul>
+                    <li><code>Transactions::parse</code>:
+                        <ul>
+                            <li>Splits the history string on <code>|</code>.</li>
+                            <li>Parses each entry into a <code>Transaction</code> struct.</li>
+                        </ul>
+                    </li>
+                    <li><code>Transactions::print(user)</code>:
+                        <ul>
+                            <li>Pretty-prints a table of Type, Amount, Time, and Balance After.</li>
+                            <li>Used by:
+                                <ul>
+                                    <li>User’s “View Activity” menu option.</li>
+                                    <li>Manager’s “View User’s Transaction History” option.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>This makes it easy to see the entire life of an account during a demo.</li>
+                </ul>
             </div>
         </section>
 
         <!-- MANAGER -->
         <section id="manager">
-            <h2 class="section-title">Manager Tools</h2>
+            <h2 class="section-title">Manager Panel &amp; Administrative Tools</h2>
             <p class="section-subtitle">
-                A separate Manager login provides administrative capabilities, including
-                viewing users and their histories and deleting accounts.
+                The manager panel simulates the kind of actions a bank employee might
+                need when managing many accounts.
             </p>
 
             <div class="grid-2">
                 <div class="card">
                     <h3>Manager Login</h3>
                     <ul>
-                        <li>Manager credentials are currently hard-coded as <code>admin</code> / <code>password</code>.</li>
-                        <li>On success, the manager is shown a dedicated menu.</li>
+                        <li>Manager logs in with a username and password.</li>
+                        <li>For this project, credentials are hard-coded:
+                            <code>admin</code> / <code>password</code> (easy to change).</li>
+                        <li>On success, the manager sees a dedicated menu with admin options.</li>
                     </ul>
-                    <p class="section-subtitle" style="margin-top:0.5rem;">
-                        In a future version, managers could be stored in a separate
-                        secure file or database.
+                    <p class="note">
+                        In a real system we would store managers separately and use
+                        stronger authentication, but this approach keeps the focus on the
+                        C++ architecture.
                     </p>
                 </div>
 
                 <div class="card">
                     <h3>Manager Menu Options</h3>
                     <ul>
-                        <li>View All Users</li>
-                        <li>View A User (summary info)</li>
-                        <li>View A User's Transaction History</li>
-                        <li>Delete A User</li>
-                        <li>Delete All Users</li>
-                        <li>Logout</li>
+                        <li><strong>View All Users</strong> – lists all accounts with IDs, names,
+                            usernames, balances, and account types.</li>
+                        <li><strong>View A User</strong> – prints a single user’s summary.</li>
+                        <li><strong>View A User’s Transaction History</strong> – calls
+                            <code>Transactions::print</code> for any username.</li>
+                        <li><strong>Delete A User</strong> – removes that user’s file.</li>
+                        <li><strong>Delete All Users</strong> – wipes all account files after
+                            a confirmation prompt.</li>
+                        <li><strong>Logout</strong> – returns to the main menu.</li>
                     </ul>
                 </div>
             </div>
         </section>
 
-        <!-- TESTING & FUTURE WORK -->
+        <!-- TESTING & FUTURE -->
         <section id="testing">
-            <h2 class="section-title">Testing & Validation</h2>
+            <h2 class="section-title">Testing Strategy &amp; Results</h2>
             <p class="section-subtitle">
-                Testing focused on boundary conditions, file persistence, and correctness
-                of transaction histories.
+                We focused on testing scenarios that are common in real banking
+                workflows and edge cases that could break the system.
             </p>
 
             <div class="grid-2">
                 <div class="card">
-                    <h3>What We Tested</h3>
+                    <h3>Manual Test Cases</h3>
                     <ul>
-                        <li>Creation of users with valid and invalid input.</li>
-                        <li>Login failures: wrong username and wrong password.</li>
-                        <li>Deposit and withdraw with edge cases:
+                        <li><strong>Account Creation</strong>:
                             <ul>
-                                <li>Negative amounts</li>
-                                <li>Zero amounts</li>
-                                <li>Withdraw > balance</li>
+                                <li>Valid vs invalid usernames (spaces, duplicates).</li>
+                                <li>Deposits below the $20 minimum.</li>
+                                <li>Cancelling creation with <code>-1</code>.</li>
                             </ul>
                         </li>
-                        <li>Transaction log updates after each operation.</li>
-                        <li>Manager tools: viewing, deleting, and listing users.</li>
+                        <li><strong>Login</strong>:
+                            <ul>
+                                <li>Wrong username.</li>
+                                <li>Wrong password.</li>
+                                <li>Successful login on a newly created account.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Transactions</strong>:
+                            <ul>
+                                <li>Multiple deposits in a row.</li>
+                                <li>Withdraw equal to full balance.</li>
+                                <li>Withdraw greater than balance (should be rejected).</li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
 
                 <div class="card" id="future">
-                    <h3>Future Enhancements</h3>
+                    <h3>Results &amp; Observations</h3>
                     <ul>
-                        <li>Encrypt stored passwords and user data.</li>
-                        <li>Add a graphical user interface (GUI).</li>
-                        <li>Support multiple accounts per user (e.g., checking + savings + credit).</li>
-                        <li>Move from text files to a relational database.</li>
-                        <li>Introduce transaction IDs and richer metadata.</li>
-                        <li>Enable networked multi-user access.</li>
+                        <li>Balance and transaction history remained consistent even across
+                            multiple program runs.</li>
+                        <li>Rejections for invalid inputs prevented negative balances.</li>
+                        <li>Manager tools successfully reflected the effects of operations
+                            performed by users.</li>
+                        <li>Text-file storage made debugging easy (we could open the file and
+                            check the “ground truth” state).</li>
                     </ul>
+                    <p class="note">
+                        The system meets all required functionality for the project and is
+                        structured to be extended in future iterations.
+                    </p>
                 </div>
+            </div>
+
+            <div class="card" style="margin-top:1rem;">
+                <h3>Future Enhancements</h3>
+                <ul>
+                    <li><strong>Security</strong>:
+                        <ul>
+                            <li>Hash and salt passwords instead of storing them in plain text.</li>
+                            <li>Add basic encryption for stored balances and transactions.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Usability</strong>:
+                        <ul>
+                            <li>Add a graphical user interface (GUI) using e.g. Qt or a web front-end.</li>
+                            <li>Add more helpful error messages and input hints.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Scalability</strong>:
+                        <ul>
+                            <li>Replace text files with a database (SQLite, PostgreSQL).</li>
+                            <li>Support multiple accounts per user (checking, savings, credit, etc.).</li>
+                            <li>Introduce transaction IDs and search/filter options.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Networking</strong>:
+                        <ul>
+                            <li>Allow multiple clients to connect to a central server.</li>
+                            <li>Turn this project into the back-end of a simple web banking app.</li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
         </section>
     </main>
