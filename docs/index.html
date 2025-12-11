@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Bank Account Management System – Project Overview</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        :root {
+            --bg: #262626;
+            --bg-alt: #333333;
+            --card-bg: #1f1f1f;
+            --accent: #3fa9f5;
+            --accent-soft: rgba(63, 169, 245, 0.2);
+            --text: #f5f5f5;
+            --muted: #bbbbbb;
+            --border: #444444;
+            --code-bg: #151515;
+            --shadow-soft: 0 16px 40px rgba(0, 0, 0, 0.45);
+            --radius-lg: 18px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+                sans-serif;
+            background: radial-gradient(circle at top, #303030 0, #181818 50%, #000 100%);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Layout */
+
+        .page {
+            min-height: 100vh;
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            backdrop-filter: blur(16px);
+            background: linear-gradient(
+                to bottom,
+                rgba(0, 0, 0, 0.85),
+                rgba(0, 0, 0, 0.25)
+            );
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .nav {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1.25rem;
+        }
+
+        .logo {
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .nav-links a {
+            color: var(--muted);
+            text-decoration: none;
+            margin-left: 1rem;
+            font-size: 0.9rem;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.2s ease-out;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 1.5rem auto 2rem auto;
+            padding: 0 1.25rem 3rem 1.25rem;
+        }
+
+        section {
+            margin-bottom: 2rem;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(0, 2fr) minmax(0, 1.4fr);
+            gap: 2rem;
+            align-items: center;
+            margin-bottom: 2.5rem;
+        }
+
+        @media (max-width: 800px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .hero-title {
+            font-size: clamp(2.2rem, 4vw, 2.8rem);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-subtitle {
+            color: var(--muted);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero-meta {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .chip {
+            border-radius: 999px;
+            font-size: 0.8rem;
+            padding: 0.25rem 0.8rem;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--muted);
+        }
+
+        .hero-card {
+            background: radial-gradient(circle at top, #3a3a3a 0, #191919 60%);
+            border-radius: 22px;
+            padding: 1.25rem 1.5rem;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .hero-card h2 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-card ul {
+            list-style: none;
+            padding-left: 0;
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        .hero-card li::before {
+            content: "•";
+            color: var(--accent);
+            margin-right: 0.5rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .section-subtitle {
+            font-size: 0.9rem;
+            color: var(--muted);
+            margin-bottom: 0.8rem;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1rem;
+        }
+
+        .card {
+            background: radial-gradient(circle at top, #333 0, #181818 60%);
+            border-radius: var(--radius-lg);
+            padding: 1rem 1.1rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            font-size: 0.9rem;
+        }
+
+        .card h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card ul {
+            padding-left: 1.1rem;
+            color: var(--muted);
+        }
+
+        .card code {
+            background: var(--code-bg);
+            padding: 0.15rem 0.35rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .pill-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: 0.4rem;
+        }
+
+        .pill {
+            font-size: 0.8rem;
+            border-radius: 999px;
+            padding: 0.2rem 0.7rem;
+            background: var(--accent-soft);
+            color: var(--accent);
+        }
+
+        .code-block {
+            background: var(--code-bg);
+            border-radius: 10px;
+            padding: 0.75rem 0.9rem;
+            font-family: "Cascadia Code", "Fira Code", monospace;
+            font-size: 0.8rem;
+            color: #f0f0f0;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            overflow-x: auto;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--muted);
+            padding: 1rem 0 2rem 0;
+            background: linear-gradient(to top, #000 0, transparent 60%);
+        }
+
+        a {
+            color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <header>
+        <nav class="nav">
+            <div class="logo">CS 371 · Final Project</div>
+            <div class="nav-links">
+                <a href="#intro">Intro</a>
+                <a href="#architecture">Architecture</a>
+                <a href="#implementation">Implementation</a>
+                <a href="#transactions">Transactions</a>
+                <a href="#manager">Manager Tools</a>
+                <a href="#testing">Testing</a>
+                <a href="#future">Future Work</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- HERO -->
+        <section id="intro" class="hero">
+            <div>
+                <h1 class="hero-title">Bank Account Management System</h1>
+                <p class="hero-subtitle">
+                    A C++ object-oriented console application that simulates a simple
+                    banking system with user accounts, transaction logging, and
+                    manager-level administration tools.
+                </p>
+                <p class="hero-meta">
+                    <strong>Authors:</strong> Jack London, Ethan Christman, David Desing
+                    <br />
+                    <strong>Course:</strong> CompSci 371 – Final Project
+                </p>
+                <div class="chip-row">
+                    <span class="chip">Language: C++</span>
+                    <span class="chip">Paradigm: OOP</span>
+                    <span class="chip">Persistence: Text Files</span>
+                    <span class="chip">Modules: User · BankAccount · Manager · Transactions</span>
+                </div>
+            </div>
+            <aside class="hero-card">
+                <h2>At a Glance</h2>
+                <ul>
+                    <li>User account creation & login</li>
+                    <li>Checking & Saving account types</li>
+                    <li>Deposits, withdrawals, balance viewing</li>
+                    <li>Transaction history with timestamps</li>
+                    <li>Manager panel: view & delete users, view history</li>
+                </ul>
+            </aside>
+        </section>
+
+        <!-- ARCHITECTURE -->
+        <section id="architecture">
+            <h2 class="section-title">System Architecture</h2>
+            <p class="section-subtitle">
+                The project follows a modular object-oriented design. Each major
+                responsibility is encapsulated in its own class or module.
+            </p>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Core Classes</h3>
+                    <ul>
+                        <li><strong>User</strong> – Represents a bank customer and handles loading/saving to <code>Users/&lt;username&gt;.txt</code>.</li>
+                        <li><strong>BankAccount</strong> – Abstract base class exposing common operations like <code>deposit</code>, <code>withdraw</code>, and the account menu.</li>
+                        <li><strong>CheckingAccount</strong> / <strong>SavingAccount</strong> – Implement account-specific behavior via polymorphism.</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>Supporting Modules</h3>
+                    <ul>
+                        <li><strong>Transactions</strong> – Parses and prints transaction history; adds initial deposit entries.</li>
+                        <li><strong>Deposit</strong> / <strong>Withdraw</strong> – Encapsulate the actual balance updates and transaction logging.</li>
+                        <li><strong>Menu</strong> – Simple textual menu renderer reused for main menu, account menu, and manager menu.</li>
+                        <li><strong>Manager</strong> – Namespace that implements manager login and admin tools.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top:1rem;">
+                <h3>UML (Conceptual)</h3>
+                <p class="section-subtitle">
+                    High-level class relationships:
+                </p>
+                <div class="code-block">
+User &lt;-- BankAccount* (composition at runtime)
+BankAccount (abstract)
+ ├─ CheckingAccount
+ └─ SavingAccount
+
+User
+ ├─ owns: username, password, balance, accountType, transactions
+ └─ persists to: Users/&lt;username&gt;.txt
+
+Manager (namespace)
+ ├─ ManagerLogin()
+ ├─ managerMenu()
+ ├─ ViewAUser()
+ └─ ViewUserHistory()
+
+Transactions (namespace)
+ ├─ parse(history)
+ ├─ print(User*)
+ └─ addInitialDeposit(User*, amount)
+                </div>
+            </div>
+        </section>
+
+        <!-- IMPLEMENTATION -->
+        <section id="implementation">
+            <h2 class="section-title">Implementation Highlights</h2>
+            <p class="section-subtitle">
+                The implementation is focused on clear data flow, safe input handling,
+                and readable modular code.
+            </p>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h3>User Creation Flow</h3>
+                    <ul>
+                        <li>Prompt for first and last name.</li>
+                        <li>Validate username (no spaces, not already taken).</li>
+                        <li>Prompt for password.</li>
+                        <li>Choose account type: Checking or Saving.</li>
+                        <li>Enter initial deposit (minimum of $20, or cancel with <code>-1</code>).</li>
+                        <li>Save all data to <code>Users/&lt;username&gt;.txt</code>.</li>
+                        <li>Record an <strong>INITIAL_DEPOSIT</strong> transaction.</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>Login & Account Menu</h3>
+                    <ul>
+                        <li>Login searches for the user’s file and verifies the <code>Password:</code> line.</li>
+                        <li>On success, constructs the appropriate account type:
+                            <div class="pill-list">
+                                <span class="pill">CheckingAccount</span>
+                                <span class="pill">SavingAccount</span>
+                            </div>
+                        </li>
+                        <li>Account menu options:
+                            <ul>
+                                <li>Deposit</li>
+                                <li>Withdraw</li>
+                                <li>Account Info</li>
+                                <li>View Activity</li>
+                                <li>Log Out</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top:1rem;">
+                <h3>File Format Example</h3>
+                <div class="code-block">
+Account#: 1002
+Username: desidj27
+Password: taco
+First: David
+Last: Desing
+Balance: 722.03
+Account Type: Checking
+Transaction History: INITIAL_DEPOSIT:300.12 TIME:2025/12/10 17:17:10 NEW_AMOUNT:300.12|DEPOSIT:421.91 TIME:2025/12/10 17:17:44 NEW_AMOUNT:722.03|
+                </div>
+                <p class="section-subtitle" style="margin-top:0.4rem;">
+                    This line-oriented format makes it straightforward to parse user
+                    records and transaction history when loading from disk.
+                </p>
+            </div>
+        </section>
+
+        <!-- TRANSACTIONS -->
+        <section id="transactions">
+            <h2 class="section-title">Transaction System</h2>
+            <p class="section-subtitle">
+                All balance-changing actions are logged using a unified text format so
+                that the history can be parsed and displayed later.
+            </p>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Log Format</h3>
+                    <p>Each entry uses the following pattern:</p>
+                    <div class="code-block">
+TYPE:amount TIME:YYYY/MM/DD HH:MM:SS NEW_AMOUNT:balance_after|
+                    </div>
+                    <ul style="margin-top:0.5rem;">
+                        <li><strong>TYPE</strong> ∈ {INITIAL_DEPOSIT, DEPOSIT, WITHDRAW}</li>
+                        <li><strong>amount</strong> – the transaction amount</li>
+                        <li><strong>TIME</strong> – timestamp when the action occurred</li>
+                        <li><strong>NEW_AMOUNT</strong> – resulting account balance</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>Parsing and Display</h3>
+                    <ul>
+                        <li><code>Transactions::parse</code> splits the history on <code>|</code>.</li>
+                        <li>Each entry is parsed into a <code>Transaction</code> struct with:
+                            <ul>
+                                <li>type</li>
+                                <li>amount</li>
+                                <li>time</li>
+                                <li>newAmount</li>
+                            </ul>
+                        </li>
+                        <li><code>Transactions::print(user)</code> prints a formatted table for:
+                            <ul>
+                                <li>User account menu (View Activity)</li>
+                                <li>Manager panel (View User’s History)</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- MANAGER -->
+        <section id="manager">
+            <h2 class="section-title">Manager Tools</h2>
+            <p class="section-subtitle">
+                A separate Manager login provides administrative capabilities, including
+                viewing users and their histories and deleting accounts.
+            </p>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Manager Login</h3>
+                    <ul>
+                        <li>Manager credentials are currently hard-coded as <code>admin</code> / <code>password</code>.</li>
+                        <li>On success, the manager is shown a dedicated menu.</li>
+                    </ul>
+                    <p class="section-subtitle" style="margin-top:0.5rem;">
+                        In a future version, managers could be stored in a separate
+                        secure file or database.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3>Manager Menu Options</h3>
+                    <ul>
+                        <li>View All Users</li>
+                        <li>View A User (summary info)</li>
+                        <li>View A User's Transaction History</li>
+                        <li>Delete A User</li>
+                        <li>Delete All Users</li>
+                        <li>Logout</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- TESTING & FUTURE WORK -->
+        <section id="testing">
+            <h2 class="section-title">Testing & Validation</h2>
+            <p class="section-subtitle">
+                Testing focused on boundary conditions, file persistence, and correctness
+                of transaction histories.
+            </p>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h3>What We Tested</h3>
+                    <ul>
+                        <li>Creation of users with valid and invalid input.</li>
+                        <li>Login failures: wrong username and wrong password.</li>
+                        <li>Deposit and withdraw with edge cases:
+                            <ul>
+                                <li>Negative amounts</li>
+                                <li>Zero amounts</li>
+                                <li>Withdraw > balance</li>
+                            </ul>
+                        </li>
+                        <li>Transaction log updates after each operation.</li>
+                        <li>Manager tools: viewing, deleting, and listing users.</li>
+                    </ul>
+                </div>
+
+                <div class="card" id="future">
+                    <h3>Future Enhancements</h3>
+                    <ul>
+                        <li>Encrypt stored passwords and user data.</li>
+                        <li>Add a graphical user interface (GUI).</li>
+                        <li>Support multiple accounts per user (e.g., checking + savings + credit).</li>
+                        <li>Move from text files to a relational database.</li>
+                        <li>Introduce transaction IDs and richer metadata.</li>
+                        <li>Enable networked multi-user access.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>
+            &copy; 2025 Bank Account Management System ·
+            <a href="https://github.com/EChristman191/CompSci371-FinalProject">
+                View Source on GitHub
+            </a>
+        </p>
+    </footer>
+</div>
+</body>
+</html>
